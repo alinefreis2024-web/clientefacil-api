@@ -1,0 +1,10 @@
+Modelo Relacional
+
+Tabela: cliente
+
+Campos:
+
+- pk_cliente (INTEGER, Chave Primária)
+- nome (VARCHAR 140)
+- telefone (VARCHAR 20)
+- email (VARCHAR 100)
