@@ -36,7 +36,7 @@ class ListagemClientesSchema(BaseModel):
 class ClienteDeleteSchema(BaseModel):
     """Modelo de resposta após excluir um cliente."""
 
-    mensagem: str = "Cliente deletado com sucesso."
+    mensagem: str = "Cliente removidi com sucesso."
     nome: str = "Maria da Silva"
 
 

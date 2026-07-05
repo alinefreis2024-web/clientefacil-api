@@ -1,6 +1,6 @@
 # ClienteFácil API
 
-API desenvolvida para a Sprint 1 do MVP, referente a disciplina desenvolvimento full stack do MBA Puc-Rio.
+API desenvolvida para a Sprint 1 do MVP, referente a disciplina desenvolvimento full stack do MBA PUC-Rio.
 
 ## Sobre o projeto
 
@@ -8,11 +8,11 @@ O ClienteFácil é um sistema para ajudar profissionais autônomos a organizar o
 
 ## Problema
 
-Muitos profissionais autonomos ainda guardam informações dos clientes em papel, planilhas ou conversas de WhatsApp. Isso pode dificultar a organização e a consulta dessas informações.
+Muitos profissionais autônomos ainda guardam informações dos clientes em papel, planilhas ou conversas de WhatsApp. Isso pode dificultar a organização e a consulta dessas informações.
 
 O ClienteFácil foi criado para ajudar estes profissionais a centralizar essas informações de forma simples utilizando uma API integrada a um banco de dados SQLite.
 
-## Funcionalidade
+## Funcionalidades
 ### O que o sistema faz?
 
 Nesta primeira versão, a API permite:
@@ -48,7 +48,7 @@ venv\Scripts\activate
 
 3. Instalar as dependências:
 
-``` bash
+```bash
 pip install -r requirements.txt
 ```
 

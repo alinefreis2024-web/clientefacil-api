@@ -129,7 +129,7 @@ def get_cliente(query: ClienteBuscaSchema):
     },
 )
 def delete_cliente(query: ClienteBuscaSchema):
-    """Deleta um cliente pelo nome."""
+    """Remove um cliente pelo nome."""
 
     nome = query.nome
     logger.info(f"Deletando cliente: {nome}")
@@ -139,9 +139,9 @@ def delete_cliente(query: ClienteBuscaSchema):
     session.commit()
                
     if count:
-        logger.info("Cliente deletado com sucesso.")
+        logger.info("Cliente removido com sucesso.")
         return {
-            "mensagem": "Cliente deletado com sucesso.", 
+            "mensagem": "Cliente removido com sucesso.", 
             "nome": nome,
         }, 200
         
