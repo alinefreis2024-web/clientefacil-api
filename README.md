@@ -1,6 +1,6 @@
 # ClienteFácil API
 
-API desenvolvida para a Sprint 1 do MVP, referente a disciplina desenvolvimento full stack do MBA PUC-Rio.
+API desenvolvida para a Sprint 1 do MVP da disciplina Desenvolvimento Full Stack do MBA PUC-Rio.
 
 ## Sobre o projeto
 
@@ -65,3 +65,8 @@ Após iniciar a aplicação, acesse:
 ```
 http://127.0.0.1:5000/openapi/swagger
 ```
+
+## Autor
+Desenvolvido por **Aline Ferreira dos Reis**.
+
+- GitHub: https://github.com/alinefreis2024-web 
