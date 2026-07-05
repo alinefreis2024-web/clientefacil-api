@@ -64,7 +64,7 @@ python app.py
 
 Após iniciar a aplicação, acesse:
 
-<http://127.0.0.1:5000/openapi/swagger>
+<http://127.0.0.1:5000/openapi/>
 
 ## Autor
 
