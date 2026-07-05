@@ -13,6 +13,7 @@ Muitos profissionais autônomos ainda guardam informações dos clientes em pape
 O ClienteFácil foi criado para ajudar estes profissionais a centralizar essas informações de forma simples utilizando uma API integrada a um banco de dados SQLite.
 
 ## Funcionalidades
+
 ### O que o sistema faz?
 
 Nesta primeira versão, a API permite:
@@ -32,13 +33,13 @@ Nesta primeira versão, a API permite:
 
 ## Como executar
 
-1. Criar o ambiente virtual:
+1.Criar o ambiente virtual:
 
 ```bash
 python -m venv venv
 ```
 
-2. Ativar o ambiente virtual.
+2.Ativar o ambiente virtual.
 
 Windows:
 
@@ -46,13 +47,13 @@ Windows:
 venv\Scripts\activate
 ```
 
-3. Instalar as dependências:
+3.Instalar as dependências:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-4. Executar a aplicação:
+4.Executar a aplicação:
 
 ```bash
 python app.py
@@ -62,11 +63,11 @@ python app.py
 
 Após iniciar a aplicação, acesse:
 
-```
-http://127.0.0.1:5000/openapi/swagger
+```http://127.0.0.1:5000/openapi/swagger
 ```
 
 ## Autor
+
 Desenvolvido por **Aline Ferreira dos Reis**.
 
-- GitHub: https://github.com/alinefreis2024-web 
+- GitHub: https://github.com/alinefreis2024-web
