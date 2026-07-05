@@ -17,10 +17,10 @@ O ClienteFácil foi criado para ajudar estes profissionais a centralizar essas i
 ### O que o sistema faz?
 
 Nesta primeira versão, a API permite:
-- cadastrar clientes;
-- listar todos clientes;
-- buscar um cliente pelo nome;
-- excluir um cliente.
+*cadastrar clientes;
+*listar todos clientes;
+*buscar um cliente pelo nome;
+*excluir um cliente.
 
 ## Tecnologias utilizadas
 
@@ -70,4 +70,4 @@ Após iniciar a aplicação, acesse:
 
 Desenvolvido por **Aline Ferreira dos Reis**.
 
-- GitHub: https://github.com/alinefreis2024-web
+- GitHub: <https://github.com/alinefreis2024-web>
