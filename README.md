@@ -1,12 +1,14 @@
 # ClienteFácil API
 
-API desenvolvida para o Sprint II do MVP da disciplina Desenvolvimento Full Stack do MBA PUC-Rio.
+API desenvolvida para o MVP do Sprint II da pós-graduação em Desenvolvimento Full Stack da PUC-Rio.
 
 ## Sobre o projeto
 
-O ClienteFácil é um sistema para ajudar profissionais autônomos a organizar os dados dos seus clientes.
+O ClienteFácil nasceu no Sprint I como um cadastro simples de clientes. No Sprint II, o projeto foi evoluído para trabalhar com mais dados do cliente e com consulta de endereço por CEP.
 
-Nesta versão, a API permite cadastrar, listar, buscar, atualizar e excluir clientes. Também consulta a API pública ViaCEP para buscar endereço pelo CEP informado.
+A ideia é ajudar profissionais autônomos que ainda guardam informações de clientes em planilhas, papel ou conversas de WhatsApp. Nesta versão, a API permite cadastrar, consultar, alterar e excluir clientes, salvando os dados em SQLite.
+
+Também foi adicionada uma consulta ao ViaCEP para preencher endereço a partir do CEP informado.
 
 ## Tecnologias utilizadas
 
@@ -18,94 +20,78 @@ Nesta versão, a API permite cadastrar, listar, buscar, atualizar e excluir clie
 - Swagger
 - Docker
 
-## Como executar localmente
+## Execução local
 
-1. Criar o ambiente virtual:
+Na pasta do projeto, crie o ambiente virtual:
 
 ```bash
 python -m venv venv
 ```
 
-2. Ativar o ambiente virtual no Windows:
+Ative o ambiente no Windows:
 
 ```bash
 venv\Scripts\activate
 ```
 
-3. Instalar as dependências:
+Instale as dependências:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-4. Executar a aplicação:
+Depois execute a API:
 
 ```bash
 flask run --host 0.0.0.0 --port 5000
 ```
 
-## Como executar com Docker
+Com a API rodando, a documentação Swagger fica disponível em:
 
-1. Construir a imagem:
+<http://127.0.0.1:5000/openapi/>
+
+## Execução com Docker
+
+Na pasta da API, execute:
 
 ```bash
 docker build -t clientefacil-api .
 ```
 
-2. Executar o container:
+Depois rode o container:
 
 ```bash
 docker run -p 5000:5000 clientefacil-api
 ```
 
-## Documentação Swagger
-
-Após iniciar a aplicação, acesse:
-
-<http://127.0.0.1:5000/openapi/>
-
-## Rotas principais
+## Rotas da API
 
 - `GET /clientes`: lista todos os clientes.
-- `GET /cliente?nome=Maria`: busca um cliente pelo nome.
+- `GET /cliente?nome=Maria`: busca um cliente cadastrado pelo nome.
 - `POST /cliente`: cadastra um cliente.
-- `PUT /cliente`: atualiza os dados de um cliente.
+- `PUT /cliente`: atualiza os dados do cliente.
 - `DELETE /cliente?nome=Maria`: remove um cliente.
-- `GET /endereco?cep=01001000`: consulta endereço pelo CEP.
+- `GET /endereco?cep=01001000`: consulta endereço usando o ViaCEP.
 
-## API externa utilizada
+## Uso da API externa
 
-Foi utilizada a API pública ViaCEP:
+Para atender ao requisito de uso de uma API externa, foi utilizado o ViaCEP:
 
 <https://viacep.com.br/>
 
-Rota utilizada:
+Exemplo de rota usada pela aplicação:
 
 ```text
 https://viacep.com.br/ws/{cep}/json/
 ```
 
-A API não exige cadastro para uso básico. Os dados retornados são tratados pela API ClienteFácil antes de serem enviados ao front-end.
+O ViaCEP é público e não exige cadastro para a consulta básica usada neste projeto. A API ClienteFácil recebe o CEP, consulta o ViaCEP e devolve para o front-end somente os campos usados na tela: CEP, logradouro, bairro, cidade e UF.
 
-## Arquitetura
+## Cenário adotado
 
-```text
-Usuário
-  |
-  v
-Front-end ClienteFácil
-  |
-  v
-API ClienteFácil
-  |
-  v
-Banco SQLite
+O cenário escolhido foi o de uma interface web consumindo uma API própria. A API própria salva os dados no SQLite e também faz a consulta ao serviço externo ViaCEP.
 
-API ClienteFácil
-  |
-  v
-API externa ViaCEP
-```
+Na prática, o fluxo ficou assim: o usuário usa o front-end, o front-end chama a API ClienteFácil, e a API acessa o banco SQLite. Quando o usuário informa um CEP, a API também consulta o ViaCEP para buscar o endereço.
 
 ## Autor
 
