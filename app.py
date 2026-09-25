@@ -1,8 +1,9 @@
-from flask import redirect
+from flask import redirect, request
 from flask_openapi3 import OpenAPI, Info, Tag
 from flask_cors import CORS
 from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
+from urllib.parse import parse_qs
 import json
 
 from sqlalchemy.exc import IntegrityError
@@ -144,10 +145,22 @@ def get_cliente(query: ClienteBuscaSchema):
 def update_cliente(form: ClienteAtualizaSchema):
     """Atualiza os dados de um cliente pelo nome."""
 
-    logger.info(f"Atualizando cliente: {form.nome}")
+    dados = request.form.to_dict()
+
+    if not dados:
+        body = request.get_data(as_text=True)
+        dados = {
+            chave: valores[0]
+            for chave, valores in parse_qs(body).items()
+            if valores
+        }
+
+    nome = dados.get("nome", form.nome)
+
+    logger.info(f"Atualizando cliente: {nome}")
 
     session = Session()
-    cliente = session.query(Cliente).filter(Cliente.nome == form.nome).first()
+    cliente = session.query(Cliente).filter(Cliente.nome == nome).first()
 
     if not cliente:
         error_msg = "Cliente não encontrado."
@@ -155,13 +168,13 @@ def update_cliente(form: ClienteAtualizaSchema):
         return {"mensagem": error_msg}, 404
 
     try:
-        cliente.telefone = form.telefone
-        cliente.email = form.email
-        cliente.cep = form.cep
-        cliente.logradouro = form.logradouro
-        cliente.bairro = form.bairro
-        cliente.cidade = form.cidade
-        cliente.uf = form.uf
+        cliente.telefone = dados.get("telefone", form.telefone)
+        cliente.email = dados.get("email", form.email)
+        cliente.cep = dados.get("cep", form.cep)
+        cliente.logradouro = dados.get("logradouro", form.logradouro)
+        cliente.bairro = dados.get("bairro", form.bairro)
+        cliente.cidade = dados.get("cidade", form.cidade)
+        cliente.uf = dados.get("uf", form.uf)
 
         session.commit()
 
