@@ -1,6 +1,9 @@
 from flask import redirect
 from flask_openapi3 import OpenAPI, Info, Tag
 from flask_cors import CORS
+from urllib.error import HTTPError, URLError
+from urllib.request import urlopen
+import json
 
 from sqlalchemy.exc import IntegrityError
 
@@ -12,6 +15,9 @@ from logger import logger
 from schemas import (
     ClienteSchema,
     ClienteBuscaSchema,
+    ClienteAtualizaSchema,
+    CepBuscaSchema,
+    EnderecoViewSchema,
     ClienteViewSchema,
     ListagemClientesSchema,
     ClienteDeleteSchema,
@@ -28,7 +34,8 @@ info = Info(
 app = OpenAPI(__name__, info=info)
 CORS(app)
 
-cliente_tag = Tag(name="Cliente", description="Cadastro, listagem, busca e remoção de clientes")
+cliente_tag = Tag(name="Cliente", description="Cadastro, listagem, busca, edição e remoção de clientes")
+endereco_tag = Tag(name="Endereço", description="Consulta de endereço utilizando a API externa ViaCEP")
 
 
 @app.get("/")
@@ -53,6 +60,11 @@ def add_cliente(form: ClienteSchema):
         nome=form.nome,
         telefone=form.telefone,
         email=form.email,
+        cep=form.cep,
+        logradouro=form.logradouro,
+        bairro=form.bairro,
+        cidade=form.cidade,
+        uf=form.uf,
     )
 
     logger.info(f"Adicionando cliente: {cliente.nome}") 
@@ -120,6 +132,48 @@ def get_cliente(query: ClienteBuscaSchema):
     return apresenta_cliente(cliente), 200
 
 
+@app.put(
+    "/cliente",
+    tags=[cliente_tag],
+    responses={
+        "200": ClienteViewSchema,
+        "404": ErrorSchema,
+        "400": ErrorSchema,
+    },
+)
+def update_cliente(form: ClienteAtualizaSchema):
+    """Atualiza os dados de um cliente pelo nome."""
+
+    logger.info(f"Atualizando cliente: {form.nome}")
+
+    session = Session()
+    cliente = session.query(Cliente).filter(Cliente.nome == form.nome).first()
+
+    if not cliente:
+        error_msg = "Cliente não encontrado."
+        logger.warning(error_msg)
+        return {"mensagem": error_msg}, 404
+
+    try:
+        cliente.telefone = form.telefone
+        cliente.email = form.email
+        cliente.cep = form.cep
+        cliente.logradouro = form.logradouro
+        cliente.bairro = form.bairro
+        cliente.cidade = form.cidade
+        cliente.uf = form.uf
+
+        session.commit()
+
+        logger.info(f"Cliente atualizado com sucesso: {cliente.nome}")
+        return apresenta_cliente(cliente), 200
+
+    except Exception as e:
+        error_msg = "Não foi possível atualizar o cliente."
+        logger.warning(f"Erro ao atualizar cliente: {e}")
+        return {"mensagem": error_msg}, 400
+
+
 @app.delete(
     "/cliente",
     tags=[cliente_tag],
@@ -148,6 +202,50 @@ def delete_cliente(query: ClienteBuscaSchema):
     error_msg = "Cliente não encontrado."
     logger.warning(error_msg)
     return {"mensagem": error_msg}, 404
+
+
+@app.get(
+    "/endereco",
+    tags=[endereco_tag],
+    responses={
+        "200": EnderecoViewSchema,
+        "404": ErrorSchema,
+        "400": ErrorSchema,
+    },
+)
+def get_endereco(query: CepBuscaSchema):
+    """Busca endereço pelo CEP utilizando a API externa ViaCEP."""
+
+    cep = "".join(filter(str.isdigit, query.cep))
+
+    if len(cep) != 8:
+        error_msg = "CEP inválido. Informe 8 números."
+        logger.warning(error_msg)
+        return {"mensagem": error_msg}, 400
+
+    logger.info(f"Consultando endereço no ViaCEP: {cep}")
+
+    try:
+        with urlopen(f"https://viacep.com.br/ws/{cep}/json/", timeout=10) as response:
+            data = json.loads(response.read().decode("utf-8"))
+
+        if data.get("erro"):
+            error_msg = "CEP não encontrado."
+            logger.warning(error_msg)
+            return {"mensagem": error_msg}, 404
+
+        return {
+            "cep": data.get("cep", ""),
+            "logradouro": data.get("logradouro", ""),
+            "bairro": data.get("bairro", ""),
+            "cidade": data.get("localidade", ""),
+            "uf": data.get("uf", ""),
+        }, 200
+
+    except (HTTPError, URLError, TimeoutError) as e:
+        error_msg = "Não foi possível consultar o ViaCEP."
+        logger.warning(f"Erro ao consultar ViaCEP: {e}")
+        return {"mensagem": error_msg}, 400
     
     
 if __name__ == "__main__":

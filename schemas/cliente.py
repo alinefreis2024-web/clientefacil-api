@@ -10,12 +10,46 @@ class ClienteSchema(BaseModel):
     nome: str = "Maria da Silva"
     telefone: str = "11999999999"
     email: str = "maria@gmail.com"
+    cep: str = "01001-000"
+    logradouro: str = "Praça da Sé"
+    bairro: str = "Sé"
+    cidade: str = "São Paulo"
+    uf: str = "SP"
    
 
 class ClienteBuscaSchema(BaseModel):
     """Modelo para buscar clientes."""
 
     nome: str = "Maria da Silva"
+
+
+class ClienteAtualizaSchema(BaseModel):
+    """Modelo para atualizar clientes."""
+
+    nome: str = "Maria da Silva"
+    telefone: str = "11888888888"
+    email: str = "maria.atualizada@gmail.com"
+    cep: str = "01001-000"
+    logradouro: str = "Praça da Sé"
+    bairro: str = "Sé"
+    cidade: str = "São Paulo"
+    uf: str = "SP"
+
+
+class CepBuscaSchema(BaseModel):
+    """Modelo para buscar endereço pelo CEP."""
+
+    cep: str = "01001000"
+
+
+class EnderecoViewSchema(BaseModel):
+    """Modelo para mostrar endereço retornado pelo ViaCEP."""
+
+    cep: str = "01001-000"
+    logradouro: str = "Praça da Sé"
+    bairro: str = "Sé"
+    cidade: str = "São Paulo"
+    uf: str = "SP"
 
 
 class ClienteViewSchema(BaseModel):
@@ -25,6 +59,11 @@ class ClienteViewSchema(BaseModel):
     nome: str = "Maria da Silva"
     telefone: str = "11999999999"
     email: str = "maria@gmail.com"
+    cep: str = "01001-000"
+    logradouro: str = "Praça da Sé"
+    bairro: str = "Sé"
+    cidade: str = "São Paulo"
+    uf: str = "SP"
 
 
 class ListagemClientesSchema(BaseModel):
@@ -48,6 +87,11 @@ def apresenta_cliente(cliente: Cliente):
         "nome": cliente.nome,
         "telefone": cliente.telefone,
         "email": cliente.email,
+        "cep": cliente.cep,
+        "logradouro": cliente.logradouro,
+        "bairro": cliente.bairro,
+        "cidade": cliente.cidade,
+        "uf": cliente.uf,
     }
 
 
@@ -62,6 +106,11 @@ def apresenta_clientes(clientes: List[Cliente]):
             "nome": cliente.nome,
             "telefone": cliente.telefone,
             "email": cliente.email,
+            "cep": cliente.cep,
+            "logradouro": cliente.logradouro,
+            "bairro": cliente.bairro,
+            "cidade": cliente.cidade,
+            "uf": cliente.uf,
         })
 
     return {"clientes": resultado}
