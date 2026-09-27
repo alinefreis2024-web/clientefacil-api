@@ -1,36 +1,51 @@
 # ClienteFácil API
 
-API desenvolvida para o MVP do Sprint II da pós-graduação em Desenvolvimento Full Stack da PUC-Rio.
+API desenvolvida para o MVP da Sprint II da pós-graduação em Desenvolvimento Full Stack da PUC-Rio.
 
-## Sobre o projeto
+O ClienteFácil começou como um cadastro simples de clientes e, nesta sprint, foi evoluído para funcionar como uma aplicação full stack com front-end, API própria, banco local e consumo de uma API externa.
 
-O ClienteFácil nasceu no Sprint I como um cadastro simples de clientes. No Sprint II, o projeto foi evoluído para trabalhar com mais dados do cliente e com consulta de endereço por CEP.
+A proposta é ajudar profissionais autônomos a guardar e consultar dados de clientes de forma mais organizada, sem depender de planilhas, papel ou conversas antigas de WhatsApp.
 
-A ideia é ajudar profissionais autônomos que ainda guardam informações de clientes em planilhas, papel ou conversas de WhatsApp. Nesta versão, a API permite cadastrar, consultar, alterar e excluir clientes, salvando os dados em SQLite.
+## O que esta API faz
 
-Também foi adicionada uma consulta ao ViaCEP para preencher endereço a partir do CEP informado.
+Esta API é responsável por:
+
+- cadastrar clientes;
+- listar clientes cadastrados;
+- buscar um cliente pelo nome;
+- atualizar os dados de um cliente;
+- excluir um cliente;
+- consultar endereço pelo CEP usando o ViaCEP;
+- salvar os dados em um banco SQLite.
 
 ## Tecnologias utilizadas
 
 - Python
 - Flask
-- Flask-OpenAPI3
+- flask-openapi3
 - SQLAlchemy
 - SQLite
-- Swagger
+- Swagger / OpenAPI
 - Docker
 
-## Execução local
+## Arquitetura da solução
 
-Na pasta do projeto, crie o ambiente virtual:
+<img width="962" height="467" alt="image" src="https://github.com/user-attachments/assets/3fde8564-fcf4-4b0e-a89c-ee0ac29f0785" />
+
+
+O fluxo principal é simples:
+
+1. O usuário acessa o front-end pelo navegador.
+2. O front-end envia requisições HTTP para a API ClienteFácil.
+3. A API grava e consulta os dados no SQLite.
+4. Quando necessário, a API consulta o ViaCEP e devolve o endereço para o front-end.
+
+## Como executar localmente
+
+Na pasta da API, crie e ative o ambiente virtual:
 
 ```bash
 python -m venv venv
-```
-
-Ative o ambiente no Windows:
-
-```bash
 venv\Scripts\activate
 ```
 
@@ -40,61 +55,64 @@ Instale as dependências:
 pip install -r requirements.txt
 ```
 
-Depois execute a API:
+Execute a API:
 
 ```bash
-flask run --host 0.0.0.0 --port 5000
+flask --app app run --host 0.0.0.0 --port 5000
 ```
 
 Com a API rodando, a documentação Swagger fica disponível em:
 
-<http://127.0.0.1:5000/openapi/>
+```text
+http://127.0.0.1:5000/openapi/swagger#/
+```
 
-## Execução com Docker
+## Como executar com Docker
 
-Na pasta da API, execute:
+Na pasta da API, construa a imagem:
 
 ```bash
 docker build -t clientefacil-api .
 ```
 
-Depois rode o container:
+Depois execute o container:
 
 ```bash
 docker run -p 5000:5000 clientefacil-api
 ```
 
-## Rotas da API
+## Rotas principais
 
-- `GET /clientes`: lista todos os clientes.
-- `GET /cliente?nome=Maria`: busca um cliente cadastrado pelo nome.
-- `POST /cliente`: cadastra um cliente.
-- `PUT /cliente`: atualiza os dados do cliente.
-- `DELETE /cliente?nome=Maria`: remove um cliente.
-- `GET /endereco?cep=01001000`: consulta endereço usando o ViaCEP.
+| Método | Rota | Função |
+|---|---|---|
+| GET | `/clientes` | Lista todos os clientes |
+| GET | `/cliente?nome=Maria` | Busca um cliente pelo nome |
+| POST | `/cliente` | Cadastra um novo cliente |
+| PUT | `/cliente` | Atualiza dados de um cliente |
+| DELETE | `/cliente?nome=Maria` | Remove um cliente |
+| GET | `/endereco?cep=01001000` | Consulta endereço pelo CEP |
 
-## Uso da API externa
+## API externa utilizada
 
-Para atender ao requisito de uso de uma API externa, foi utilizado o ViaCEP:
+Foi utilizado o ViaCEP:
 
-<https://viacep.com.br/>
+```text
+https://viacep.com.br/
+```
 
-Exemplo de rota usada pela aplicação:
+A rota consultada segue este formato:
 
 ```text
 https://viacep.com.br/ws/{cep}/json/
 ```
 
-O ViaCEP é público e não exige cadastro para a consulta básica usada neste projeto. A API ClienteFácil recebe o CEP, consulta o ViaCEP e devolve para o front-end somente os campos usados na tela: CEP, logradouro, bairro, cidade e UF.
+O ViaCEP é público e não exige cadastro para a consulta usada neste projeto. A API ClienteFácil recebe o CEP, consulta o ViaCEP e devolve para o front-end apenas os dados usados na tela: CEP, logradouro, bairro, cidade e UF.
 
-## Cenário adotado
+## Repositórios
 
-O cenário escolhido foi o de uma interface web consumindo uma API própria. A API própria salva os dados no SQLite e também faz a consulta ao serviço externo ViaCEP.
+- API: https://github.com/alinefreis2024-web/clientefacil-api
+- Front-end: https://github.com/alinefreis2024-web/clientefacil-frontend
 
-Na prática, o fluxo ficou assim: o usuário usa o front-end, o front-end chama a API ClienteFácil, e a API acessa o banco SQLite. Quando o usuário informa um CEP, a API também consulta o ViaCEP para buscar o endereço.
+## Autora
 
-## Autor
-
-Desenvolvido por **Aline Ferreira dos Reis**.
-
-- GitHub: <https://github.com/alinefreis2024-web>
+Desenvolvido por Aline Ferreira dos Reis para a Sprint II do MVP da PUC-Rio.
